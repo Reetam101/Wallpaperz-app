@@ -39,7 +39,7 @@ const HomeScreen = () => {
 
   const fetchImages = async (params = { page: 1 }, append = true) => {
     let res = await apiCall(params);
-    if (res.success && res?.data?.hits) {
+    if (res?.data?.hits) {
       if (append) {
         setImages([...images, ...res.data.hits]);
       } else {
@@ -47,7 +47,7 @@ const HomeScreen = () => {
       }
     }
   };
-
+  console.log("images: ", images);
   console.log("active category: ", activeCategory);
 
   return (
