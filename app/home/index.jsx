@@ -23,6 +23,7 @@ import ImageGrid from "../../components/imageGrid";
 import { debounce } from "lodash";
 import FiltersModal from "../../components/filtersModal";
 import { ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router";
 var page = 1;
 const HomeScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -35,6 +36,7 @@ const HomeScreen = () => {
   const modalRef = useRef(null);
   const scrollRef = useRef(null);
   const [isEndReached, setIsEndReached] = useState(false);
+  const router = useRouter();
 
   const applyFilters = () => {
     if (filters) {
@@ -127,6 +129,14 @@ const HomeScreen = () => {
       if (!isEndReached) {
         setIsEndReached(true);
         console.log("reached the bottom");
+        ++page;
+        let params = {
+          page,
+          ...filters,
+        };
+        if (activeCategory) params.category = activeCategory;
+        if (search) params.q = search;
+        fetchImages(params, true);
       }
     } else if (isEndReached) {
       setIsEndReached(false);
@@ -267,7 +277,9 @@ const HomeScreen = () => {
             </ScrollView>
           </View>
         )}
-        <View>{images.length > 0 && <ImageGrid images={images} />}</View>
+        <View>
+          {images.length > 0 && <ImageGrid images={images} router={router} />}
+        </View>
         {/* loading */}
         <View
           style={{
